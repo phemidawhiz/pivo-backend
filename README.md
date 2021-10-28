@@ -1,7 +1,7 @@
-# pivo-backend
-backend for pivo coding test
+# Pivo Backend
+Backend for pivo coding test
 
-# install dependencies
+# Install dependencies
 
 Run the following command `npm install`
 
