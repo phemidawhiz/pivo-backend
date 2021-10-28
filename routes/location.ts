@@ -3,7 +3,7 @@ import * as locationModel from "../models/location";
 import { Location } from "../types/location";
 const locationRouter = express.Router();
 
-locationRouter.get("/location/:id", async (req: Request, res: Response) => {
+locationRouter.get("/:id", async (req: Request, res: Response) => {
     const truckId: number = Number(req.params.id);
     locationModel.findAll(truckId, (err: Error, orders: Location[]) => {
         if (err) {
@@ -13,7 +13,7 @@ locationRouter.get("/location/:id", async (req: Request, res: Response) => {
     });
 });
 
-locationRouter.post("/location/", async (req: Request, res: Response) => {
+locationRouter.post("/", async (req: Request, res: Response) => {
     const newLocation: Location = req.body;
     locationModel.create(newLocation, (err: Error, locationId: number) => {
         if (err) {

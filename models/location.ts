@@ -3,7 +3,7 @@ import {db} from "../db";
 import { OkPacket, RowDataPacket } from "mysql2";
 
 export const create = (location: Location, callback: Function) => { // create location
-    const queryString = "INSERT INTO locations (truck_id, longitude, latitude) VALUES (?, ?, ?)"
+    const queryString = "INSERT INTO trucklocations (truck_id, longitude, latitude) VALUES (?, ?, ?)"
 
     db.query(
         queryString,
@@ -22,7 +22,7 @@ export const findOne = (locationId: number, callback: Function) => { // get a lo
     const queryString = `
     SELECT 
       *
-    FROM locations 
+    FROM trucklocations 
     WHERE id=?`
 
     db.query(queryString, locationId, (err, result) => {
@@ -31,7 +31,7 @@ export const findOne = (locationId: number, callback: Function) => { // get a lo
         const row = (<RowDataPacket> result)[0];
         const location: Location =  {
             id: row.id,
-            truckId: row.truck_id,
+            truckId: row.truckId,
             longitude: row.longitude,
             latitude: row.latitude,
             datetime: row.datetime
@@ -45,7 +45,7 @@ export const findAll = (truckId: number, callback: Function) => { // get all loc
     SELECT 
       *
     FROM 
-    locations
+    trucklocations
     WHERE truck_id=?
     `
 
@@ -58,7 +58,7 @@ export const findAll = (truckId: number, callback: Function) => { // get all loc
         rows.forEach(row => {
             const location: Location =  {
                 id: row.id,
-                truckId: row.truck_id,
+                truckId: row.truckId,
                 longitude: row.longitude,
                 latitude: row.latitude,
                 datetime: row.datetime
