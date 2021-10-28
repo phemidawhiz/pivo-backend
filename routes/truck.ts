@@ -1,16 +1,7 @@
 import express, {Request, Response} from "express";
-import * as truckModel from "../models/trucks";
+import * as truckModel from "../models/truck";
 import { Truck } from "../types/truck";
 const truckRouter = express.Router();
-
-truckRouter.get("/", async (req: Request, res: Response) => {
-    truckModel.findAll((err: Error, orders: Truck[]) => {
-        if (err) {
-            return res.status(500).json({"errorMessage": err.message});
-        }
-        res.status(200).json({"data": orders});
-    });
-});
 
 truckRouter.post("/", async (req: Request, res: Response) => {
     const newTruck: Truck = req.body;
@@ -25,17 +16,18 @@ truckRouter.post("/", async (req: Request, res: Response) => {
 
 truckRouter.get("/:id", async (req: Request, res: Response) => {
     const truckId: number = Number(req.params.id);
-    truckModel.findOne(truckId, (err: Error, order: Truck) => {
+    truckModel.findOne(truckId, (err: Error, truck: Truck) => {
         if (err) {
             return res.status(500).json({"message": err.message});
         }
-        res.status(200).json({"data": order});
+        res.status(200).json({"data": truck});
     })
 });
 
 truckRouter.put("/:id", async (req: Request, res: Response) => {
-    const order: Truck = req.body;
-    truckModel.update(order, (err: Error) => {
+    const truck: Truck = req.body;
+    const truckId: number = Number(req.params.id);
+    truckModel.update(truck, truckId, (err: Error) => {
         if (err) {
             return res.status(500).json({"message": err.message});
         }

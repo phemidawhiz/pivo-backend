@@ -2,6 +2,8 @@ import mysql from "mysql2";
 import * as dotenv from "dotenv";
 dotenv.config();
 
+export const pageLimit: number = 7;
+
 export const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

@@ -1,6 +1,6 @@
 import {Location} from "../types/location";
 import {db} from "../db";
-import { OkPacket, RowDataPacket } from "mysql2";
+import {OkPacket, QueryError, ResultSetHeader, RowDataPacket} from "mysql2";
 
 export const create = (location: Location, callback: Function) => { // create location
     const queryString = "INSERT INTO trucklocations (truck_id, longitude, latitude) VALUES (?, ?, ?)"
@@ -8,11 +8,21 @@ export const create = (location: Location, callback: Function) => { // create lo
     db.query(
         queryString,
         [location.truckId, location.longitude, location.latitude],
-        (err, result) => {
+        (
+            err: QueryError | null,
+            result:  RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader
+        ) => {
             if (err) {callback(err)};
 
             const insertId = (<OkPacket> result).insertId;
-            callback(null, insertId);
+            callback(
+                null,
+                {
+                    status: true,
+                    message: "location created successfully",
+                    info: insertId
+                }
+        );
         }
     );
 };
@@ -23,9 +33,12 @@ export const findOne = (locationId: number, callback: Function) => { // get a lo
     SELECT 
       *
     FROM trucklocations 
-    WHERE id=?`
+    WHERE location_id=?`
 
-    db.query(queryString, locationId, (err, result) => {
+    db.query(queryString, locationId, (
+        err: QueryError | null,
+        result:  RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader
+    ) => {
         if (err) {callback(err)}
 
         const row = (<RowDataPacket> result)[0];
@@ -37,34 +50,5 @@ export const findOne = (locationId: number, callback: Function) => { // get a lo
             datetime: row.datetime
         }
         callback(null, location);
-    });
-}
-
-export const findAll = (truckId: number, callback: Function) => { // get all locations of a particular truck id
-    const queryString = `
-    SELECT 
-      *
-    FROM 
-    trucklocations
-    WHERE truck_id=?
-    `
-
-    db.query(queryString, truckId, (err, result) => {
-        if (err) {callback(err)}
-
-        const rows = <RowDataPacket[]> result;
-        const locations: Location[] = [];
-
-        rows.forEach(row => {
-            const location: Location =  {
-                id: row.id,
-                truckId: row.truckId,
-                longitude: row.longitude,
-                latitude: row.latitude,
-                datetime: row.datetime
-            }
-            locations.push(location);
-        });
-        callback(null, locations);
     });
 }
