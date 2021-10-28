@@ -7,7 +7,7 @@ Run the following command `npm install`
 
 # Database Setup
 
-create a db with any relevant name of your choice (e.g. pivotrucks) and import the nodetest.sql in the root folder into it
+create a db with any relevant name of your choice (e.g. pivotrucks) and import the ``nodetest.sql`` file in the root folder into it
 
 # Environment Variables
 create a .env file in the root folder and update as follows:
