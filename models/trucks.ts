@@ -7,7 +7,7 @@ export const findAll = (pageNo: number, callback: Function) => { // get all truc
     SELECT 
       *
     FROM 
-    trucks
+    trucks ORDER BY id DESC
     LIMIT ?, ?
     `
 
@@ -20,16 +20,26 @@ export const findAll = (pageNo: number, callback: Function) => { // get all truc
         const rows = <RowDataPacket[]> result;
         const trucks: Truck[] = [];
 
-        rows.forEach(row => {
-            const truck: Truck =  {
-                name: row.name,
-                id: row.id,
-                description: row.description,
-                datetime: row.datetime,
-                imageurl: row.imageurl
+        if(rows) {
+            rows.forEach(row => {
+                const truck: Truck =  {
+                    name: row.name,
+                    id: row.id,
+                    description: row.description,
+                    datetime: row.datetime,
+                    imageurl: row.imageurl
+                }
+                trucks.push(truck);
+            });
+        }
+        callback(null, {
+            trucks: trucks,
+            pagination: {
+                nextPageUrl: `/${pageNo + 1}`,
+                previousPageUrl: `/${pageNo - 1}`,
+                page: pageNo,
+
             }
-            trucks.push(truck);
         });
-        callback(null, trucks);
     });
 }

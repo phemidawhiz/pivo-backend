@@ -5,9 +5,18 @@ import {truckRouter} from "./routes/truck";
 import {locationRouter} from "./routes/location";
 import {trucksRouter} from "./routes/trucks";
 import {locationsRouter} from "./routes/locations";
+import cors from 'cors';
 
 const app = express();
 dotenv.config();
+
+const allowedOrigins = ['http://localhost:3110'];
+
+const options: cors.CorsOptions = {
+    origin: allowedOrigins
+};
+
+app.use(cors(options));
 
 app.use(bodyParser.json());
 app.use("/truck", truckRouter);

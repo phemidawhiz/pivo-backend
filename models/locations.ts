@@ -9,6 +9,7 @@ export const findAll = (truckId: number, pageNo: number, callback: Function) => 
     FROM 
     trucklocations
     WHERE truck_id=?
+    ORDER BY location_id DESC
     LIMIT ?, ?
     `
 
@@ -21,16 +22,18 @@ export const findAll = (truckId: number, pageNo: number, callback: Function) => 
         const rows = <RowDataPacket[]> result;
         const locations: Location[] = [];
 
-        rows.forEach(row => {
-            const location: Location =  {
-                id: row.id,
-                truckId: row.truckId,
-                longitude: row.longitude,
-                latitude: row.latitude,
-                datetime: row.datetime
-            }
-            locations.push(location);
-        });
+        if(rows) {
+            rows.forEach(row => {
+                const location: Location =  {
+                    id: row.id,
+                    truckId: row.truckId,
+                    longitude: row.longitude,
+                    latitude: row.latitude,
+                    datetime: row.datetime
+                }
+                locations.push(location);
+            });
+        }
         callback(null, locations);
     });
 }
